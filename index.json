@@ -1,0 +1,113 @@
+[
+{
+	"uri": "//localhost:1313/",
+	"title": "Automating Threat Detection and Prevention with Suricata and Elastic Cloud On AWS",
+	"tags": [],
+	"description": "",
+	"content": "\nAUTOMATING THREAT DETECTION AND PREVENTION WITH SURICATA AND ELASTIC CLOUD ON AWS Overview This workshop provides a comprehensive, hands-on approach to integrating Suricata, a powerful open-source IDS/IPS, with Elastic Cloud on AWS to automate threat detection and enhance cloud security. Participants will gain practical experience in configuring and deploying a secure network monitoring solution using AWS services and Elastic Stack. Specifically, you will be able to do and understand the following:\nSuricata IDS/IPS Setup on AWS: Learn how to deploy Suricata on AWS EC2 instances for real-time network traffic analysis, threat detection and prevention.\nElastic Cloud Integration: Understand how to forward Suricata logs to Elastic Cloud for advanced monitoring, search, and analysis using Kibana. Automating Threat Detection and Prevention: Explore how to automate threat detection workflows. Real-Time Dashboards and Reporting: Build and configure custom dashboards in Kibana to visualize Suricata logs and automated threat detection results. Content: Introduction Preparation Setting up Suricata Log monitoring with Elastic Cloud Clean up resources "
+},
+{
+	"uri": "//localhost:1313/3-setting-up-suricata/1-create-ec2/",
+	"title": "Create EC2 Server",
+	"tags": [],
+	"description": "",
+	"content": "Create EC2 Server How to create an EC2 Instant\nAccess the AWS Management Console:\nProvide a Name and tags for the instance: Suricata EC2\nChoose the AMI: Select Quick Start Choose Ubuntu Select Ubuntu Server 22.04 LTS (HVM), SSD Volume Type Select an Instance type (Recommend t2.medium or higher) and opt to Create a new key pair\nIn the Create key pair interface: Specify the Key pair name, e.g., aws-keypair (optional name, you can set any). Choose Key pair type: RSA Select Private key file format: .pem Configure the Network:\nSelect the VPC: suricata-vpc Choose the Subnet: Public Subnet 1 Enable Auto-assign public IP For Firewall (Security Group), select Select existing security group Choose Public subnet -SG Click Launch instance "
+},
+{
+	"uri": "//localhost:1313/1-introduction/",
+	"title": "Introduction",
+	"tags": [],
+	"description": "",
+	"content": "Introduction You will learn how to integrate services such as Suricata, Elastic Cloud to build an automated threat detection and network monitoring system on your EC2 on AWS.\nSuricata: You will understand how to deploy and configure Suricata on AWS EC2 to perform real-time network traffic analysis and threat detection.\nElastic Cloud: You will learn how to forward logs from Suricata to Elastic Cloud for visualization and advanced analysis using Kibana. Elastic Cloud also provides Machine Learning capabilities to detect anomalies in network traffic.\nServices covered in the workshop include: Suricata IDS/IPS\nWhat it does: Suricata is a high-performance network IDS/IPS that inspects network traffic to detect and block malicious activity in real time. How you\u0026rsquo;ll use it: Deploy Suricata on an AWS EC2 instance to analyze mirrored VPC traffic for threats. Elastic Cloud\nWhat it does: Elastic Cloud is a managed service providing Elasticsearch, Kibana, and Machine Learning tools for analyzing and visualizing log data. How you\u0026rsquo;ll use it: Forward Suricata logs to Elastic Cloud to create visualizations and set up anomaly detection with Elastic\u0026rsquo;s ML features. AWS Service Deployment and Configuration Steps: You will practice creating AWS services and connecting them together, thereby creating a complete security monitoring system. You will understand the deployment process, from creating AWS resources to integrating them into an automated threat detection system.\nCreate VPC and configure security groups. Deploy and configure an EC2 instance with Suricata installed. Forward Suricata logs to Elastic Cloud for monitoring in Kibana. "
+},
+{
+	"uri": "//localhost:1313/2-preparation/1-prerequiste/",
+	"title": "Prerequistes",
+	"tags": [],
+	"description": "",
+	"content": "Prerequistes Create a VPC named suricata-vpc Create a Subnet named Public Subnet 1 With IPv4 subnet CIDR block: 10.10.1.0/24 How to create Internet Gateway and attach it to a VPC\nCreate Internet Gateway named Internet Gateway and attach it to suricata-vpc: How to create Route Tables\nCreate Route Tables named Route Tables: Create Security Group: Public Subnet -SG Setting up Inbound and Outbound rules of the Security Group: Review and Create Security Group\n"
+},
+{
+	"uri": "//localhost:1313/4-log-monitoring/1-using-elastic/",
+	"title": "Using Elastic Cloud Service",
+	"tags": [],
+	"description": "",
+	"content": "Using Elastic Cloud Service Access the AWS Marketplace: Search and select Elastic Cloud (Elastic Search Service): Select Try for free: Press Subscribe: Open Set up your account to start using Elastic Cloud: After Open Set up your account, we will be redirected to Elastic Cloud Sign up page:\nSign up your Elastic Cloud account: After creating an Elastic Cloud account, create a deployment with any name you want: Cloud provider: Amazon Web Services Region: The region of your EC2 Press Continue Choose a solution view that you want to focus on and Create Deployment: Download/Save the Deployment credentials on safe place for future use: "
+},
+{
+	"uri": "//localhost:1313/2-preparation/2-create-user-group/",
+	"title": "Create User Group &amp; Policy",
+	"tags": [],
+	"description": "",
+	"content": "Create User Group \u0026amp; Policy for Elastic Cloud usage In the Console interface: Search for keyword: IAM Select Create policy\nEdit Policy with JSON: { \u0026#34;Version\u0026#34;: \u0026#34;2012-10-17\u0026#34;, \u0026#34;Statement\u0026#34;: [ { \u0026#34;Sid\u0026#34;: \u0026#34;FirstStatement\u0026#34;, \u0026#34;Effect\u0026#34;: \u0026#34;Allow\u0026#34;, \u0026#34;Action\u0026#34;: [ \u0026#34;s3:GetObject\u0026#34;, \u0026#34;s3:PutObject\u0026#34;, \u0026#34;s3:DeleteObject\u0026#34;, \u0026#34;s3:CreateBucket\u0026#34; ], \u0026#34;Resource\u0026#34;: \u0026#34;arn:aws:s3:::*\u0026#34; }, { \u0026#34;Sid\u0026#34;: \u0026#34;SecondStatement\u0026#34;, \u0026#34;Effect\u0026#34;: \u0026#34;Allow\u0026#34;, \u0026#34;Action\u0026#34;: [ \u0026#34;logs:CreateLogGroup\u0026#34;, \u0026#34;logs:CreateLogStream\u0026#34;, \u0026#34;logs:PutLogEvents\u0026#34;, \u0026#34;lambda:AddPermission\u0026#34;, \u0026#34;lambda:CreateFunction\u0026#34;, \u0026#34;lambda:GetFunction\u0026#34;, \u0026#34;lambda:InvokeFunction\u0026#34;, \u0026#34;lambda:UpdateFunctionConfiguration\u0026#34;, \u0026#34;lambda:ListFunctions\u0026#34;, \u0026#34;lambda:DeleteFunction\u0026#34;, \u0026#34;lambda:RemovePermission\u0026#34; ], \u0026#34;Resource\u0026#34;: [ \u0026#34;arn:aws:lambda:*:*:*\u0026#34;, \u0026#34;arn:aws:logs:*:*:*\u0026#34; ] }, { \u0026#34;Sid\u0026#34;: \u0026#34;ThirdStatement\u0026#34;, \u0026#34;Effect\u0026#34;: \u0026#34;Allow\u0026#34;, \u0026#34;Action\u0026#34;: [ \u0026#34;cloudformation:CreateChangeSet\u0026#34;, \u0026#34;cloudformation:DescribeChangeSet\u0026#34;, \u0026#34;cloudformation:DescribeStackResource\u0026#34;, \u0026#34;cloudformation:DescribeStacks\u0026#34;, \u0026#34;cloudformation:ExecuteChangeSet\u0026#34;, \u0026#34;cloudformation:CreateStack\u0026#34; ], \u0026#34;Resource\u0026#34;: [ \u0026#34;*\u0026#34; ] }, { \u0026#34;Sid\u0026#34;: \u0026#34;FourthStatement\u0026#34;, \u0026#34;Effect\u0026#34;: \u0026#34;Allow\u0026#34;, \u0026#34;Action\u0026#34;: [ \u0026#34;secretsmanager:GetSecretValue\u0026#34;, \u0026#34;secretsmanager:ListSecretVersionIds\u0026#34;, \u0026#34;secretsmanager:ListSecretVersionIds\u0026#34; ], \u0026#34;Resource\u0026#34;: [ \u0026#34;arn:aws:secretsmanager:*:*:secret:ElasticApiKeySecret*\u0026#34; ] }, { \u0026#34;Sid\u0026#34;: \u0026#34;FifthStatement\u0026#34;, \u0026#34;Effect\u0026#34;: \u0026#34;Allow\u0026#34;, \u0026#34;Action\u0026#34;: [ \u0026#34;secretsmanager:ListSecrets\u0026#34; ], \u0026#34;Resource\u0026#34;: [ \u0026#34;*\u0026#34; ] }, { \u0026#34;Sid\u0026#34;: \u0026#34;SixtStatement\u0026#34;, \u0026#34;Effect\u0026#34;: \u0026#34;Allow\u0026#34;, \u0026#34;Action\u0026#34;: [ \u0026#34;iam:CreateServiceLinkedRole\u0026#34; ], \u0026#34;Resource\u0026#34;: [ \u0026#34;arn:aws:iam::*:role/aws-service-role/deployment.marketplace.amazonaws.com/AWSServiceRoleForMarketplaceDeployment\u0026#34; ] }, { \u0026#34;Sid\u0026#34;: \u0026#34;SeventhStatement\u0026#34;, \u0026#34;Effect\u0026#34;: \u0026#34;Allow\u0026#34;, \u0026#34;Action\u0026#34;: [ \u0026#34;iam:ListRoles\u0026#34;, \u0026#34;iam:ListRolePolicies\u0026#34;, \u0026#34;iam:ListRoleTags\u0026#34;, \u0026#34;iam:ListAttachedRolePolicies\u0026#34;, \u0026#34;iam:GetRole\u0026#34;, \u0026#34;iam:GetRolePolicy\u0026#34;, \u0026#34;iam:CreateRole\u0026#34;, \u0026#34;iam:DeleteRole\u0026#34;, \u0026#34;iam:UpdateRole\u0026#34;, \u0026#34;iam:AttachRolePolicy\u0026#34;, \u0026#34;iam:DeleteRolePolicy\u0026#34;, \u0026#34;iam:PutRolePolicy\u0026#34;, \u0026#34;iam:UpdateAssumeRolePolicy\u0026#34;, \u0026#34;iam:DetachRolePolicy\u0026#34;, \u0026#34;iam:PassRole\u0026#34; ], \u0026#34;Resource\u0026#34;: [ \u0026#34;*\u0026#34; ] } ] } Review and create:\nPolicy name: Elastic-Cloud-IAM-Policy\nDesciption: Basic Policies for Elastic Cloud Integrations Create Policy: Create User Group:\nIn the IAM tab, select User groups: Named the User Group: ElasticUserGroup Search \u0026amp; attach Elastic-Cloud-IAM-Policy permissions policy: "
+},
+{
+	"uri": "//localhost:1313/2-preparation/",
+	"title": "Preparation",
+	"tags": [],
+	"description": "",
+	"content": "Preparation To learn how to create EC2 instances and VPCs with public subnets, you can refer to the following documents:\nUsing Amazon VPC About Amazon EC2\nIn this section, we will set up the preparation steps to deploy a security solution on EC2. We will create an EC2 server named Surucata EC2 to get the suspicious ip, and another machine named user-ec2 will try to contact that suspicious ip, and scan the suspicious ip port to see if there is any port to access\nPrerequiste Create User Group \u0026amp; Policy Create IAM Role "
+},
+{
+	"uri": "//localhost:1313/4-log-monitoring/2-setting-up/",
+	"title": "Setting up Elastic Cloud",
+	"tags": [],
+	"description": "",
+	"content": "Setting up Elastic Cloud To monitor Suricata\u0026rsquo;s logs with Elastic Cloud, first we need to install Elastic Agent on Suricata EC2 instance: Search and Navigate to Elastic Integration: Press Add Suricata to begin adding Suricata Integration: Copy the command and run it on the Suricata EC2 Instance to install Elastic Agent: Run the command on Suricata EC2 Instance: After finished running the command, press Confirm incoming data: Navigate to Dashboards, [Logs Suricata] Alert Overview to monitor Suricata\u0026rsquo;s log overview Alternatively, you can monitor Suricata\u0026rsquo;s logs with more details by navigating to Discover: For example, apply filter: Navigate to Discover Apply filter to search for logs with suricata.eve.alert.signature exists Add field suricata.eve.alert.signature "
+},
+{
+	"uri": "//localhost:1313/3-setting-up-suricata/2-setting-up/",
+	"title": "Setting up Suricata IDS",
+	"tags": [],
+	"description": "",
+	"content": "Setting up Suricata IDS Installing Suricata sudo add-apt-repository ppa:oisf/suricata-stable\rsudo apt-get update\rsudo apt-get install suricata Enabling Suricata Enable the suricata.service to boot whenever system starts up: sudo systemctl enable suricata.service Verify the Suricata service is running: sudo systemctl status suricata.service Configuring Suricata Suricata by default will inspect traffic on eth0. If your system uses a different default interface, then you will need to change this value.\nip -p -j route show default Navigate \u0026amp;edit Suricata’s configuration file. sudo nano /etc/suricata/suricata.yaml Ctrl + W and find community-id:\nEdit community-id: false to community-id: true Ctrl + W and find af-packet:\nEdit - interface: eth0 if your interface isn\u0026rsquo;t eth0 To be able to add, remove, and edit rules without having to restart the Suricata service, scroll to the last line in the editor (Ctrl+V) and type the following:\ndetect-engine:\r- rule-reload: true Save the file and close the editor by Ctrl + X, then Y and Enter. Kill current pid of Suricata process to its rulesets and restart the Suricata service: sudo kill -usr2 $(pidof suricata)\rsudo service suricata restart if sudo kill -usr2 $(pidof suricata) return an error, you can check its pid by using pidof suricata and sudo kill -usr2 the_number_of_pid\nsuricata-update is a command-line tool included with Suricata that manages and updates the rulesets used by Suricata for intrusion detection and prevention. It simplifies the process of downloading, configuring, and keeping these rulesets up-to-date: sudo suricata-update Update all Suricata’s ruleset providers with no-check-certificate to ignore validating for a certificate authority: sudo suricata-update --no-check-certificate update-sources List all Suricata’s ruleset providers:\nsudo suricata-update list-sources The Emerging Threats Open Ruleset is a free version of Emerging Threats Pro, contains a collection of intrusion detection and prevention rules for use with Suricata and other IDS/IPS systems, to enable it:\nsudo suricata-update enable-source et/open\rsudo suricata-update Kill current pid of Suricata process again to update its rulesets:\nsudo kill -usr2 $(pidof suricata) Test Suricata IDS by using: curl http://testmynids.org/uid/index.html The output data is designed to trigger an alert pretending to be root user. You can check Suricata’s logs for the corresponding alert with the following command: tail /var/log/suricata/fast.log "
+},
+{
+	"uri": "//localhost:1313/2-preparation/3-create-role/",
+	"title": "Create IAM Role",
+	"tags": [],
+	"description": "",
+	"content": "Create IAM Role for Elastic Cloud usage In the Console interface: Search for keyword: IAM Select Users and Create user Create Users named: ElasticCloudUser "
+},
+{
+	"uri": "//localhost:1313/3-setting-up-suricata/",
+	"title": "Setting up Suricata",
+	"tags": [],
+	"description": "",
+	"content": "Setting up Suricata In this step, we will create an EC2 servers (EC2 instances) to install Suricata IDS/IPS and an Elastic Agent to forward Suricata\u0026rsquo;s log to monitor Elastic Cloud Kibana:\nCreate EC2 Server Setting up Suricata Using Elastic Cloud Service "
+},
+{
+	"uri": "//localhost:1313/3-setting-up-suricata/3-setting-up2/",
+	"title": "Setting up Suricata IPS",
+	"tags": [],
+	"description": "",
+	"content": "Setting up Suricata IPS After successfully configured Suricata IDS, you can turn it into in IPS with these steps sudo nano /etc/default/suricata Ctrl + W and find LISTENMODE=af-packet and change it to LISTENMODE=nfqueue Save and close the file by Ctrl + X then restart Suricata: sudo service suricata restart Suricata is running in IPS mode: sudo service suricata status The next step is to direct incoming network traffic to Suricata’s NFQUEUE. Open IPv4 rules with the following command: sudo nano /etc/ufw/before.rules Add the following lines: -I INPUT -j NFQUEUE -I OUTPUT -j NFQUEUE Save and close the file. Enable firewall to load new rules just configured:\nsudo ufw enable To test our IDS and create a custom rule to see if the traffic will get dropped, we will need to create our own rules file. You can create your rules file anywhere:\nsudo nano /var/lib/suricata/rules/local.rules Create the following rule to drop any ICMP ping to the host.\ndrop ICMP any any -\u0026gt; $HOME_NET any (msg: \u0026#34;ICMP Ping Blocked\u0026#34;; sid:2; rev:1;) Save the file by Ctrl + X.\nIf you want to learn more about Suricata’s rules format, visit this link here. The documentation explains the signatures, how to read, adjust, and create rules.\nAdd your new created rules to Suricata’s config file by:\nsudo nano /etc/suricata/suricata.yaml Ctrl + W and type rule-files and insert the directory path of the rules file created:\n- /var/lib/suricata/rules/local.rules Save the suricata.yaml file and then reload Suricata’s rules without restarting with the following command:\nsudo kill -usr2 $(pidof suricata) Test your configuration again to verify there were no issues when making your rule:\nsudo suricata -T -c /etc/suricata/suricata.yaml -v On another machine, send a simple ping request to Suricata EC2. Every attempt to send ping request should be dropped:\nping EXTERNAL_IP/PUBLIC_IP Suricata is now acting as an IPS and dropped all the ping requests.\nCheck the Suricata logs:\ntail /var/log/suricata/fast.log "
+},
+{
+	"uri": "//localhost:1313/4-log-monitoring/",
+	"title": "Log monitoring with Elastic Cloud",
+	"tags": [],
+	"description": "",
+	"content": "Log monitoring with Elastic Cloud In this step, we will install Elastic Agent in the EC2 instance to forward Suricata\u0026rsquo;s logs to Elastic Cloud Kibana to monitor:\nUsing Elastic Cloud Service Setting up Elastic Cloud Using Elastic Cloud Service "
+},
+{
+	"uri": "//localhost:1313/5-clean-up/",
+	"title": "Clean up resource",
+	"tags": [],
+	"description": "",
+	"content": "We will clean up resources in the following order:\nGo to IAM to delete the created resource, including User Groups, Policies, Users.\nGo to AWS Marketplace to cancel Elastic Cloud (Elastic Search Service) subscription.\nTerminate EC2 instance\nAccess EC2 Management Console. On the left navigation bar, select Instances. Select all EC2 Instances related to the lab. Click Actions. Click Manage Instance State. Select Terminate. To delete VPC and related resources:\nAccess the endpoint, delete the resource that was created during the practice, the endpoint containing the created VPC.\nOpen the Amazon VPC dashboard.\nDelete the VPC.\nSelect VPC Dashboard, then select VPC.\nSelect the VPC you want to delete.\nFrom Actions, select Delete VPC.\nOn the confirmation page, type delete, then select Delete.\nOpen the Amazon VPC dashboard.\nSelect VPC Dashboard, then select Security Groups.\nCheck for missing security groups after deleting the VPC\nSelect the security group related to the lab.\nSelect Actions, select Delete security groups, and then select Delete to confirm.\n"
+},
+{
+	"uri": "//localhost:1313/categories/",
+	"title": "Categories",
+	"tags": [],
+	"description": "",
+	"content": ""
+},
+{
+	"uri": "//localhost:1313/tags/",
+	"title": "Tags",
+	"tags": [],
+	"description": "",
+	"content": ""
+}]
